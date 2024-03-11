@@ -182,12 +182,12 @@ static int gfspi_ioctl_clk_init(struct gf_dev *data)
 	data->clk_enabled = 0;
 	data->core_clk = clk_get(&data->spi->dev, "core_clk");
 	if (IS_ERR_OR_NULL(data->core_clk)) {
-		pr_err("%s: fail to get core_clk\n", __func__);
+		pr_debug("%s: fail to get core_clk\n", __func__);
 		return -EPERM;
 	}
 	data->iface_clk = clk_get(&data->spi->dev, "iface_clk");
 	if (IS_ERR_OR_NULL(data->iface_clk)) {
-		pr_err("%s: fail to get iface_clk\n", __func__);
+		pr_debug("%s: fail to get iface_clk\n", __func__);
 		clk_put(data->core_clk);
 		data->core_clk = NULL;
 		return -ENOENT;
@@ -206,13 +206,13 @@ static int gfspi_ioctl_clk_enable(struct gf_dev *data)
 
 	err = clk_prepare_enable(data->core_clk);
 	if (err) {
-		pr_err("%s: fail to enable core_clk\n", __func__);
+		pr_debug("%s: fail to enable core_clk\n", __func__);
 		return -EPERM;
 	}
 
 	err = clk_prepare_enable(data->iface_clk);
 	if (err) {
-		pr_err("%s: fail to enable iface_clk\n", __func__);
+		pr_debug("%s: fail to enable iface_clk\n", __func__);
 		clk_disable_unprepare(data->core_clk);
 		return -ENOENT;
 	}
@@ -332,7 +332,6 @@ static irqreturn_t gf_irq(int irq, void *handle)
 	__pm_wakeup_event(&fp_ws, WAKELOCK_HOLD_TIME);
 	sendnlmsg(&msg);
 	if (gf_dev->device_available == 1) {
-		printk("%s:shedule_work\n",__func__);
 		gf_dev->wait_finger_down = false;
 		schedule_work(&gf_dev->work);
 	}
@@ -356,7 +355,7 @@ static int irq_setup(struct gf_dev *gf_dev)
 			"gf", gf_dev);
 
 	if (status) {
-		pr_err("failed to request IRQ:%d\n", gf_dev->irq);
+		pr_debug("failed to request IRQ:%d\n", gf_dev->irq);
 		return status;
 	}
 	enable_irq_wake(gf_dev->irq);
@@ -387,7 +386,7 @@ static void gf_kernel_key_input(struct gf_dev *gf_dev, struct gf_key *gf_key)
 		/* add special key define */
 		key_input = gf_key->key;
 	}
-	pr_info("%s: received key event[%d], key=%d, value=%d\n",
+	pr_debug("%s: received key event[%d], key=%d, value=%d\n",
 			__func__, key_input, gf_key->key, gf_key->value);
 
 	if ((GF_KEY_POWER == gf_key->key || GF_KEY_CAMERA == gf_key->key)
@@ -683,7 +682,7 @@ static int goodix_fb_state_chg_callback(struct notifier_block *nb,
 
 	if (val != MSM_DRM_EVENT_BLANK && val != MSM_DRM_EARLY_EVENT_BLANK)
 		return 0;
-	pr_info("[info] %s go to the goodix_fb_state_chg_callback value = %d\n",
+	pr_debug("[info] %s go to the goodix_fb_state_chg_callback value = %d\n",
 			__func__, (int)val);
 	gf_dev = container_of(nb, struct gf_dev, notifier);
 	if (evdata && evdata->data && val == MSM_DRM_EVENT_BLANK && gf_dev) {
@@ -780,7 +779,7 @@ static int gf_probe(struct platform_device *pdev)
   
 	gf_dev->input = input_allocate_device();
 	if (gf_dev->input == NULL) {
-		pr_err("%s, failed to allocate input device\n", __func__);
+		pr_debug("%s, failed to allocate input device\n", __func__);
 		status = -ENOMEM;
 		goto error_dev;
 	}
@@ -790,7 +789,7 @@ static int gf_probe(struct platform_device *pdev)
 	gf_dev->input->name = GF_INPUT_NAME;
 	status = input_register_device(gf_dev->input);
 	if (status) {
-		pr_err("failed to register input device\n");
+		pr_debug("failed to register input device\n");
 		goto error_input;
 	}
 
