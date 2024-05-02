@@ -177,6 +177,7 @@ void fsl_spi_cpm_bufs_complete(struct mpc8xxx_spi *mspi)
 	if (mspi->map_rx_dma)
 		dma_unmap_single(dev, mspi->rx_dma, t->len, DMA_FROM_DEVICE);
 	mspi->xfer_in_progress = NULL;
+
 }
 EXPORT_SYMBOL_GPL(fsl_spi_cpm_bufs_complete);
 
