@@ -327,7 +327,7 @@ struct device_node *of_batterydata_get_best_profile(
 		i = 0, rc = 0, limit = 0;
 	bool in_range = false;
 
-	pr_info(" sunxing get best profile enter\n");
+	pr_info("sunxing get best profile enter\n");
 	/* read battery id range percentage for best profile */
 	rc = of_property_read_u32(batterydata_container_node,
 			"qcom,batt-id-range-pct", &id_range_pct);
