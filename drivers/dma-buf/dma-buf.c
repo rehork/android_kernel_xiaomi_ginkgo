@@ -34,13 +34,13 @@
 #include <linux/poll.h>
 #include <linux/reservation.h>
 #include <linux/mm.h>
+#include <linux/mount.h>
 #include <linux/kernel.h>
 #include <linux/atomic.h>
 #include <linux/sched/signal.h>
 #include <linux/fdtable.h>
 #include <linux/list_sort.h>
 #include <linux/hashtable.h>
-#include <linux/mount.h>
 #include <linux/dcache.h>
 
 #include <uapi/linux/dma-buf.h>
@@ -410,6 +410,21 @@ out_unlock:
 	return ret;
 }
 
+static long dma_buf_get_name(struct dma_buf *dmabuf, char __user *buf)
+{
+	const char *name = "";
+	long ret = 0;
+
+	mutex_lock(&dmabuf->lock);
+	if (dmabuf->name)
+		name = dmabuf->name;
+	if (copy_to_user(buf, name, strlen(name) + 1))
+		ret = -EFAULT;
+	mutex_unlock(&dmabuf->lock);
+
+	return ret;
+}
+
 static long dma_buf_ioctl(struct file *file,
 			  unsigned int cmd, unsigned long arg)
 {
@@ -460,6 +475,9 @@ static long dma_buf_ioctl(struct file *file,
 	case DMA_BUF_SET_NAME_A:
 	case DMA_BUF_SET_NAME_B:
 		return dma_buf_set_name(dmabuf, (const char __user *)arg);
+
+	case DMA_BUF_GET_NAME:
+		return dma_buf_get_name(dmabuf, (char __user *)arg);
 
 	default:
 		return -ENOTTY;
@@ -654,8 +672,6 @@ struct dma_buf *dma_buf_export(const struct dma_buf_export_info *exp_info)
 		ret = PTR_ERR(file);
 		goto err_dmabuf;
 	}
-
-	file->f_mode |= FMODE_LSEEK;
 	dmabuf->file = file;
 
 	mutex_init(&dmabuf->lock);
@@ -1507,7 +1523,8 @@ static void free_proc(struct dma_proc *proc)
 	int i;
 
 	hash_for_each_safe(proc->dma_bufs, i, n, tmp, head) {
-		fput(tmp->dmabuf->file);
+		if(tmp->dmabuf && tmp->dmabuf->file)
+			fput(tmp->dmabuf->file);
 		hash_del(&tmp->head);
 		kfree(tmp);
 	}
