@@ -685,7 +685,6 @@ LDFINAL_vmlinux := $(LD)
 LD		:= $(LDGOLD)
 LDFLAGS		+= -plugin LLVMgold.so
 endif
-
 # use llvm-ar for building symbol tables from IR files, and llvm-dis instead
 # of objdump for processing symbol versions and exports
 ifneq ($(findstring llvm-ar,$(AR)),)
@@ -730,10 +729,12 @@ KBUILD_CFLAGS	+= $(call cc-disable-warning, zero-length-bounds)
 KBUILD_CFLAGS += $(call cc-option, -Wno-pointer-to-int-cast)
 KBUILD_CFLAGS += $(call cc-option, -Wno-void-pointer-to-int-cast)
 
-ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
-KBUILD_CFLAGS   += -Os
-else
+ifdef CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE
+KBUILD_CFLAGS   += -O2
+else ifdef CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3
 KBUILD_CFLAGS   += -O3
+else ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
+KBUILD_CFLAGS   += -Os
 ifeq ($(cc-name),clang)
 KBUILD_CFLAGS	+= -mcpu=cortex-a53+crypto -mtune=cortex-a53
 
