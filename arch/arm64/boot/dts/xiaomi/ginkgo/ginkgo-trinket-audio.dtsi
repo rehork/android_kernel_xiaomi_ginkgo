@@ -5,18 +5,18 @@
 };
 
 &wsa_macro {
-    compatible = "qcom,wsa-macro";
-    status = "disabled";
+	compatible = "qcom,wsa-macro";
+	status = "disabled";
 };
 
 &wcd937x_codec{
-    qcom,cdc-micbias1-mv = <2700>;
+	qcom,cdc-micbias1-mv = <2700>;
 	qcom,cdc-micbias2-mv = <2700>;
 	qcom,cdc-micbias3-mv = <2700>;
 };
 
 &sm6150_snd{
-    qcom,audio-routing =
+	qcom,audio-routing =
 		"AMIC2", "MIC BIAS2",
 		"MIC BIAS2", "Analog Mic2",
 		"AMIC1", "MIC BIAS1",
@@ -46,10 +46,10 @@
 		"WSA_SPK1 OUT", "VA_MCLK",
 		"WSA_SPK2 OUT", "VA_MCLK";
 	qcom,pri-mi2s-gpios = <&cdc_pri_mi2s_gpios>;
-    qcom,wsa-max-devs = <0>;
+	qcom,wsa-max-devs = <0>;
 	/delete-property/ qcom,cdc-dmic01-gpios;
-    /delete-property/ qcom,cdc-dmic23-gpios;
-    /delete-property/ qcom,wsa-devs;
+	/delete-property/ qcom,cdc-dmic23-gpios;
+	/delete-property/ qcom,wsa-devs;
 };
 
 &qupv3_se1_i2c {
@@ -98,23 +98,23 @@
 };
 
 &cdc_dmic01_gpios {
-    status = "disabled";
+	status = "disabled";
 };
 
 &cdc_dmic23_gpios {
-    status = "disabled";
+	status = "disabled";
 };
 
 &wsa_swr_gpios {
-    status = "disabled";
+	status = "disabled";
 };
 
 &wsa_spkr_en1 {
-    status = "disabled";
+	status = "disabled";
 };
 
 &soc {
-    cdc_pri_mi2s_gpios: msm_cdc_pinctrl_pri {
+	cdc_pri_mi2s_gpios: msm_cdc_pinctrl_pri {
 		compatible = "qcom,msm-cdc-pinctrl";
 		pinctrl-names = "aud_active", "aud_sleep";
 		pinctrl-0 = <&pri_i2s_sck_active &pri_i2s_ws_active
@@ -135,5 +135,5 @@
 
 &dai_mi2s2 {
 	qcom,msm-mi2s-rx-lines = <1>;
-	qcom,msm-mi2s-tx-lines = <2>;	
+	qcom,msm-mi2s-tx-lines = <2>;
 };

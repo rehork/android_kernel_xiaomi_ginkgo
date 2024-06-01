@@ -102,7 +102,7 @@
 	qcom,mdss-dsi-display-timings {
 		timing@0{
 			qcom,mdss-dsi-panel-phy-timings =
-				[26 21 09 0b 06 02 04 a0
+			       [26 21 09 0b 06 02 04 a0
 				26 21 09 0b 06 02 04 a0
 				26 21 09 0b 06 02 04 a0
 				26 21 09 0b 06 02 04 a0
@@ -137,7 +137,7 @@
 	qcom,mdss-dsi-display-timings {
 		timing@0{
 			qcom,mdss-dsi-panel-phy-timings =
-			   [26 21 09 0B 06 03 04 a0
+			       [26 21 09 0B 06 03 04 a0
 				26 21 09 0B 06 03 04 a0
 				26 21 09 0B 06 03 04 a0
 				26 21 09 0B 06 03 04 a0
@@ -172,7 +172,7 @@
 	qcom,mdss-dsi-display-timings {
 		timing@0{
 			qcom,mdss-dsi-panel-phy-timings =
-				[26 21 09 0b 06 02 04 a0
+			       [26 21 09 0b 06 02 04 a0
 				26 21 09 0b 06 02 04 a0
 				26 21 09 0b 06 02 04 a0
 				26 21 09 0b 06 02 04 a0
