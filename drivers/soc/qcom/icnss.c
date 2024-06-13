@@ -3555,26 +3555,6 @@ static int icnss_debugfs_create(struct icnss_priv *priv)
 out:
 	return ret;
 }
-#else
-static int icnss_debugfs_create(struct icnss_priv *priv)
-{
-	int ret = 0;
-	struct dentry *root_dentry;
-
-	root_dentry = debugfs_create_dir("icnss", NULL);
-
-	if (IS_ERR(root_dentry)) {
-		ret = PTR_ERR(root_dentry);
-		icnss_pr_err("Unable to create debugfs %d\n", ret);
-		return ret;
-	}
-
-	priv->root_dentry = root_dentry;
-
-	debugfs_create_file("stats", 0600, root_dentry, priv,
-			    &icnss_stats_fops);
-	return 0;
-}
 #endif
 
 static void icnss_debugfs_destroy(struct icnss_priv *priv)
@@ -3837,6 +3817,8 @@ static int icnss_probe(struct platform_device *pdev)
 			goto out_unregister_ext_modem;
 	}
 
+	device_enable_async_suspend(dev);
+
 	spin_lock_init(&priv->event_lock);
 	spin_lock_init(&priv->on_off_lock);
 	mutex_init(&priv->dev_lock);
@@ -3859,7 +3841,9 @@ static int icnss_probe(struct platform_device *pdev)
 
 	icnss_enable_recovery(priv);
 
+#ifdef CONFIG_DEBUG_FS
 	icnss_debugfs_create(priv);
+#endif
 
 	icnss_sysfs_create(priv);
 
