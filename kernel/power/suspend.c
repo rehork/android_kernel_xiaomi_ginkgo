@@ -221,6 +221,7 @@ static int __init mem_sleep_default_setup(char *str)
 		if (mem_sleep_labels[state] &&
 		    !strcmp(str, mem_sleep_labels[state])) {
 			mem_sleep_default = state;
+			mem_sleep_current = state;
 			break;
 		}
 
@@ -593,6 +594,7 @@ static int enter_state(suspend_state_t state)
 	if (!mutex_trylock(&pm_mutex))
 		return -EBUSY;
 
+	pm_wakeup_clear(true);
 	if (state == PM_SUSPEND_TO_IDLE)
 		s2idle_begin();
 
